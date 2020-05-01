@@ -1,11 +1,9 @@
 package pl.ljedrzynski.axonbyexample.ecommerce.sales.domain.client;
 
 import lombok.NoArgsConstructor;
-import org.axonframework.commandhandling.CommandHandler;
 import org.axonframework.eventsourcing.EventSourcingHandler;
 import org.axonframework.modelling.command.AggregateIdentifier;
 import org.axonframework.spring.stereotype.Aggregate;
-import pl.ljedrzynski.axonbyexample.ecommerce.sales.application.commands.CreateClientCommand;
 import pl.ljedrzynski.axonbyexample.ecommerce.sales.domain.client.events.ClientCreatedEvent;
 
 import static org.axonframework.modelling.command.AggregateLifecycle.apply;
@@ -19,9 +17,9 @@ public class Client {
 
     private String name;
 
-    @CommandHandler
-    public Client(CreateClientCommand cmd) {
-        apply(new ClientCreatedEvent(cmd.getClientId(), cmd.getName()));
+
+    public Client(String id, String name) {
+        apply(new ClientCreatedEvent(id, name));
     }
 
     @EventSourcingHandler

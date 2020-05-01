@@ -1,0 +1,43 @@
+package pl.ljedrzynski.axonbyexample.ecommerce.sales.webui.ordering;
+
+import lombok.RequiredArgsConstructor;
+import org.axonframework.commandhandling.gateway.CommandGateway;
+import org.springframework.web.bind.annotation.*;
+import pl.ljedrzynski.axonbyexample.ecommerce.sales.application.commands.AddProductToOrderCommand;
+import pl.ljedrzynski.axonbyexample.ecommerce.sales.application.commands.ChangeOrderedProductQuantityCommand;
+import pl.ljedrzynski.axonbyexample.ecommerce.sales.application.commands.CreateOrderCommand;
+import pl.ljedrzynski.axonbyexample.ecommerce.sales.application.commands.RemoveProductFromOrderCommand;
+import pl.ljedrzynski.axonbyexample.ecommerce.sales.webui.ordering.models.AddOrderItemRequest;
+import pl.ljedrzynski.axonbyexample.ecommerce.sales.webui.ordering.models.ChangeOrderItemQuantityRequest;
+
+import java.util.UUID;
+
+@RestController
+@RequestMapping("/api/orders")
+@RequiredArgsConstructor
+public class OrderingController {
+
+    private final CommandGateway commandGateway;
+
+    @PostMapping
+    public String createOrder() {
+        String aggregateId = UUID.randomUUID().toString();
+        commandGateway.send(new CreateOrderCommand(aggregateId));
+        return aggregateId;
+    }
+
+    @PostMapping("/{orderId}/order-items")
+    public void addOrderItem(@PathVariable String orderId, @RequestBody AddOrderItemRequest request) {
+        commandGateway.send(new AddProductToOrderCommand(orderId, request.getProductId(), request.getQuantity()));
+    }
+
+    @PutMapping("/{orderId}/order-items/{productId}")
+    public void changeOrderItemQuantity(@PathVariable String orderId, @PathVariable String productId, @RequestBody ChangeOrderItemQuantityRequest request) {
+        commandGateway.send(new ChangeOrderedProductQuantityCommand(orderId, productId, request.getQuantity()));
+    }
+
+    @DeleteMapping("/{orderId}/order-items/{productId}")
+    public void removeOrderItem(@PathVariable String orderId, @PathVariable String productId) {
+        commandGateway.send(new RemoveProductFromOrderCommand(orderId, productId));
+    }
+}

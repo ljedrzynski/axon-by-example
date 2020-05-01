@@ -8,6 +8,4 @@ public class CreateOrderCommand {
 
     @TargetAggregateIdentifier
     String orderId;
-
-    String clientId;
 }

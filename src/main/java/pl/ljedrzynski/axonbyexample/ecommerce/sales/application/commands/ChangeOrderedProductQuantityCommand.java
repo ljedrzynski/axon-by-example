@@ -4,9 +4,10 @@ import lombok.Value;
 import org.axonframework.modelling.command.TargetAggregateIdentifier;
 
 @Value
-public class CreateClientCommand {
+public class ChangeOrderedProductQuantityCommand {
 
     @TargetAggregateIdentifier
-    String clientId;
-    String name;
+    String orderId;
+    String productId;
+    int quantity;
 }

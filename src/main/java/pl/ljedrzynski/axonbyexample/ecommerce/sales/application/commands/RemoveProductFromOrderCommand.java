@@ -4,9 +4,9 @@ import lombok.Value;
 import org.axonframework.modelling.command.TargetAggregateIdentifier;
 
 @Value
-public class CreateClientCommand {
+public class RemoveProductFromOrderCommand {
 
     @TargetAggregateIdentifier
-    String clientId;
-    String name;
+    String orderId;
+    String productId;
 }

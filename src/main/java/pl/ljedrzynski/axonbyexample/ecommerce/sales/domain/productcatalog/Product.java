@@ -1,37 +1,37 @@
 package pl.ljedrzynski.axonbyexample.ecommerce.sales.domain.productcatalog;
 
+import org.axonframework.eventsourcing.EventSourcingHandler;
 import org.axonframework.modelling.command.AggregateIdentifier;
+import org.axonframework.spring.stereotype.Aggregate;
+import pl.ljedrzynski.axonbyexample.ecommerce.sales.domain.productcatalog.events.ProductAddedToCatalogEvent;
 import pl.ljedrzynski.axonbyexample.ecommerce.shared.cannonicalmodel.Money;
 
-import javax.persistence.AttributeOverride;
-import javax.persistence.AttributeOverrides;
-import javax.persistence.Column;
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import static org.axonframework.modelling.command.AggregateLifecycle.apply;
 
-@Entity
+@Aggregate
 public class Product {
 
-    @Id
-    @GeneratedValue
     @AggregateIdentifier
     private String id;
 
     private String name;
 
-    @Enumerated(EnumType.STRING)
     private ProductType type;
 
-    @Embedded
-    @AttributeOverrides(value = {
-            @AttributeOverride(name = "denomination", column = @Column(name = "price_value")),
-            @AttributeOverride(name = "currencyCode", column = @Column(name = "price_currency"))
-    })
     private Money price;
+
+
+    public Product(String id, String name, ProductType type, Money price) {
+        apply(new ProductAddedToCatalogEvent(id, name, type, price));
+    }
+
+    @EventSourcingHandler
+    public void handle(ProductAddedToCatalogEvent event) {
+        this.id = event.getId();
+        this.name = event.getName();
+        this.price = event.getPrice();
+        this.type = event.getType();
+    }
 
     public String getId() {
         return id;
@@ -39,14 +39,6 @@ public class Product {
 
     public String getName() {
         return name;
-    }
-
-    public ProductType getType() {
-        return type;
-    }
-
-    public Money getPrice() {
-        return price;
     }
 
     public ProductData getSnapshot() {

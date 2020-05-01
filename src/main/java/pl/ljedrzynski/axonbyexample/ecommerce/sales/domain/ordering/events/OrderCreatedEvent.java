@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 
 @Value
 public class OrderCreatedEvent {
+
     String orderId;
     ClientData clientData;
     LocalDateTime createDate;

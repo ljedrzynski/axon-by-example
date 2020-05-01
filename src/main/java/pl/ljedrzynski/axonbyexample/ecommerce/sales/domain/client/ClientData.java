@@ -8,7 +8,6 @@ import lombok.Value;
 public class ClientData {
 
     String id;
-
     String name;
 
     public ClientData(ClientData clientData) {

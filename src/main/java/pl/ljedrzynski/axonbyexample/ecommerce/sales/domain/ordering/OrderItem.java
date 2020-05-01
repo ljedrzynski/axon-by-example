@@ -22,16 +22,21 @@ public class OrderItem {
 
     public void changeQuantityBy(int change) {
         int newQuantity = this.quantity + change;
-
         if (newQuantity <= 0) {
-            throw new OrderingDomainException(entityId, "Order item quantity change below 1");
+            throw new OrderingOperationException(entityId, "Order item quantity change below 1");
         }
-
         this.quantity = newQuantity;
+    }
+
+    public String getEntityId() {
+        return entityId;
     }
 
     public ProductData getProductData() {
         return this.productData;
     }
 
+    public String getProductId() {
+        return this.productData.getId();
+    }
 }

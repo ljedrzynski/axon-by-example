@@ -7,11 +7,7 @@ import pl.ljedrzynski.axonbyexample.ecommerce.shared.cannonicalmodel.Money;
 public class ProductData {
 
     String id;
-
     String name;
-
     ProductType type;
-
     Money price;
-
 }
