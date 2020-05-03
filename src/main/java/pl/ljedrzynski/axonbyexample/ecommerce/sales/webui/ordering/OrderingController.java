@@ -27,23 +27,23 @@ public class OrderingController {
     @PostMapping
     public String createOrder() {
         String aggregateId = UUID.randomUUID().toString();
-        commandGateway.send(new CreateOrderCommand(aggregateId));
+        commandGateway.sendAndWait(new CreateOrderCommand(aggregateId));
         return aggregateId;
     }
 
     @PostMapping("/{orderId}/order-items")
     public void addOrderItem(@PathVariable String orderId, @RequestBody AddOrderItemRequest request) {
-        commandGateway.send(new AddProductToOrderCommand(orderId, request.getProductId(), request.getQuantity()));
+        commandGateway.sendAndWait(new AddProductToOrderCommand(orderId, request.getProductId(), request.getQuantity()));
     }
 
     @PutMapping("/{orderId}/order-items/{productId}")
     public void changeOrderItemQuantity(@PathVariable String orderId, @PathVariable String productId, @RequestBody ChangeOrderItemQuantityRequest request) {
-        commandGateway.send(new ChangeOrderedProductQuantityCommand(orderId, productId, request.getQuantity()));
+        commandGateway.sendAndWait(new ChangeOrderedProductQuantityCommand(orderId, productId, request.getQuantity()));
     }
 
     @DeleteMapping("/{orderId}/order-items/{productId}")
     public void removeOrderItem(@PathVariable String orderId, @PathVariable String productId) {
-        commandGateway.send(new RemoveProductFromOrderCommand(orderId, productId));
+        commandGateway.sendAndWait(new RemoveProductFromOrderCommand(orderId, productId));
     }
 
     @GetMapping("/{orderId}")
