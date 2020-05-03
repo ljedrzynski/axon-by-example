@@ -4,13 +4,11 @@ package pl.ljedrzynski.axonbyexample.ecommerce.shared.cannonicalmodel;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Embeddable;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Currency;
 
-@Embeddable
 @NoArgsConstructor
 @EqualsAndHashCode
 public class Money implements Serializable {
@@ -84,7 +82,7 @@ public class Money implements Serializable {
 
     /**
      * @return currency from this object or otherCurrencyCode. Preferred is the
-     *         one that comes from Money that has non-zero value.
+     * one that comes from Money that has non-zero value.
      */
     private Currency determineCurrencyCode(Money otherMoney) {
         String resultingCurrenctCode = isZero(denomination) ? otherMoney.currencyCode : currencyCode;

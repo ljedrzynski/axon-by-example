@@ -1,8 +1,8 @@
 package pl.ljedrzynski.axonbyexample.ecommerce.sales.webui.ordering.models;
 
-import lombok.Value;
+import lombok.Data;
 
-@Value
+@Data
 public class AddOrderItemRequest {
 
     String productId;

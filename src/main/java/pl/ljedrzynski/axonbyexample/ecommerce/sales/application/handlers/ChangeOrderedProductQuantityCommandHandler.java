@@ -8,12 +8,12 @@ import pl.ljedrzynski.axonbyexample.ecommerce.sales.domain.ordering.OrderingServ
 
 @Component
 @RequiredArgsConstructor
-class ChangeOrderedProductQuantityCommandHandler {
+public class ChangeOrderedProductQuantityCommandHandler {
 
     private final OrderingService orderingService;
 
     @CommandHandler
     void handle(ChangeOrderedProductQuantityCommand command) {
-        orderingService.changeOrderedProductQuantity(command.getOrderId(), command.getProductId(), command.getQuantity());
+        orderingService.changeOrderedProductQuantity(command.getOrderId(), command.getProductId(), command.getProductQuantity());
     }
 }

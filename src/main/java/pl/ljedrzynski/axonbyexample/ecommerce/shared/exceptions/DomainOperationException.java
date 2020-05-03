@@ -1,7 +1,8 @@
 package pl.ljedrzynski.axonbyexample.ecommerce.shared.exceptions;
 
-public class DomainOperationException extends RuntimeException {
-    String aggregateId;
+public class DomainOperationException extends EcommerceRuntimeException {
+
+    private final String aggregateId;
 
     public DomainOperationException(String aggregateId, String message) {
         super(message);
@@ -9,7 +10,7 @@ public class DomainOperationException extends RuntimeException {
     }
 
     public DomainOperationException(String aggregateId, String message, Object... args) {
-        super(String.format(message, args));
+        super(message, args);
         this.aggregateId = aggregateId;
     }
 

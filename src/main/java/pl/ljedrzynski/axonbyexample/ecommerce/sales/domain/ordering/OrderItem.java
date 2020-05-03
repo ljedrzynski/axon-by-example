@@ -20,6 +20,13 @@ public class OrderItem {
         this.quantity = quantity;
     }
 
+    public void changeQuantity(int newQuantity) {
+        if (newQuantity <= 0) {
+            throw new OrderingOperationException(entityId, "Order item quantity change below 1");
+        }
+        this.quantity = newQuantity;
+    }
+
     public void changeQuantityBy(int change) {
         int newQuantity = this.quantity + change;
         if (newQuantity <= 0) {

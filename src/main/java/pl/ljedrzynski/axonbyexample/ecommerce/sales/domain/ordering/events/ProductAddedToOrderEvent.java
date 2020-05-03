@@ -6,6 +6,7 @@ import pl.ljedrzynski.axonbyexample.ecommerce.sales.domain.productcatalog.Produc
 @Value
 public class ProductAddedToOrderEvent {
 
+    String orderItemId;
     String orderId;
     ProductData productData;
     int quantity;

@@ -23,9 +23,9 @@ public class Client {
     }
 
     @EventSourcingHandler
-    public void on(ClientCreatedEvent clientCreatedEvent) {
-        this.id = clientCreatedEvent.getClientId();
-        this.name = clientCreatedEvent.getClientName();
+    public void on(ClientCreatedEvent event) {
+        this.id = event.getClientId();
+        this.name = event.getClientName();
     }
 
     public String getId() {

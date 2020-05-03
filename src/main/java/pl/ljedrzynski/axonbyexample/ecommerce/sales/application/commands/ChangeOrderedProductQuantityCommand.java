@@ -9,5 +9,5 @@ public class ChangeOrderedProductQuantityCommand {
     @TargetAggregateIdentifier
     String orderId;
     String productId;
-    int quantity;
+    int productQuantity;
 }

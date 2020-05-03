@@ -15,6 +15,7 @@ import pl.ljedrzynski.axonbyexample.ecommerce.sales.domain.productcatalog.Produc
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.axonframework.modelling.command.AggregateLifecycle.apply;
@@ -37,16 +38,16 @@ public class Order {
     private ClientData clientData;
 
     @AggregateMember
-    private List<OrderItem> orderItems;
+    private List<OrderItem> items;
 
 
     public Order(String id, ClientData clientData, LocalDateTime createDate) {
-        apply(new OrderCreatedEvent(id, clientData, createDate));
+        apply(new OrderCreatedEvent(id, clientData, createDate, Order.OrderStatus.OPEN));
     }
 
     public void addItem(ProductData product, int quantity) {
         checkIfQuantityNumberIsValid(quantity);
-        apply(new ProductAddedToOrderEvent(id, product, quantity));
+        apply(new ProductAddedToOrderEvent(UUID.randomUUID().toString(), id, product, quantity));
     }
 
     public void changeItemQuantity(String productId, int quantity) {
@@ -64,30 +65,31 @@ public class Order {
         id = event.getOrderId();
         createDate = event.getCreateDate();
         clientData = event.getClientData();
-        status = OrderStatus.OPEN;
-        orderItems = new ArrayList<>();
+        status = event.getOrderStatus();
+        items = new ArrayList<>();
     }
 
     @EventSourcingHandler
     public void on(ProductAddedToOrderEvent event) {
-        var product = event.getProductData();
+        var orderItemId = event.getOrderItemId();
+        var productData = event.getProductData();
         var quantity = event.getQuantity();
 
-        if (containsItem(product)) {
-            changeItemQuantityBy(product.getId(), quantity);
+        if (containsItemByProductId(productData.getId())) {
+            changeItemQuantityBy(productData.getId(), quantity);
         }
 
-        addNewItem(product, quantity);
+        addNewItem(orderItemId, productData, quantity);
     }
 
     @EventSourcingHandler
     public void on(OrderProductQuantityChangedEvent event) {
-        changeItemQuantityBy(event.getProductId(), event.getQuantity());
+        changeItemQuantityTo(event.getProductId(), event.getQuantity());
     }
 
     @EventSourcingHandler
     public void on(ProductRemovedFromOrderEvent event) {
-        this.orderItems.removeIf(orderItem -> orderItem.getProductId().equals(event.getProductId()));
+        this.items.removeIf(orderItem -> orderItem.getProductId().equals(event.getProductId()));
     }
 
     public String getId() {
@@ -106,21 +108,23 @@ public class Order {
         return new ClientData(clientData);
     }
 
-    private boolean containsItem(ProductData product) {
-        return this.orderItems.stream()
-                .map(OrderItem::getProductData)
-                .anyMatch(orderedProduct -> orderedProduct.equals(product));
+    private boolean containsItemByProductId(String productId) {
+        return getOrderItem(productId)
+                .isPresent();
     }
 
     private void changeItemQuantityBy(String productId, int quantity) {
-        this.orderItems.stream()
-                .filter(orderItem -> orderItem.getProductId().equals(productId))
-                .findFirst()
+        getOrderItem(productId)
                 .ifPresent(orderItem -> orderItem.changeQuantityBy(quantity));
     }
 
-    private void addNewItem(ProductData product, int quantity) {
-        this.orderItems.add(new OrderItem(UUID.randomUUID().toString(), product, quantity));
+    private void changeItemQuantityTo(String productId, int quantity) {
+        getOrderItem(productId)
+                .ifPresent(orderItem -> orderItem.changeQuantity(quantity));
+    }
+
+    private void addNewItem(String itemId, ProductData product, int quantity) {
+        this.items.add(new OrderItem(itemId, product, quantity));
     }
 
     private void checkIfQuantityNumberIsValid(int quantity) {
@@ -130,10 +134,16 @@ public class Order {
     }
 
     private void checkIfContainsProduct(String productId) {
-        this.orderItems.stream()
+        this.items.stream()
                 .map(OrderItem::getProductId)
                 .filter(existProductId -> existProductId.equals(productId))
                 .findAny()
                 .orElseThrow(() -> new OrderingOperationException(id, "Order does not contain product with id %s", productId));
+    }
+
+    private Optional<OrderItem> getOrderItem(String productId) {
+        return this.items.stream()
+                .filter(orderItem -> orderItem.getProductId().equals(productId))
+                .findFirst();
     }
 }

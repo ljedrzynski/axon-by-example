@@ -8,7 +8,7 @@ import pl.ljedrzynski.axonbyexample.ecommerce.sales.domain.ordering.OrderingServ
 
 @Component
 @RequiredArgsConstructor
-class RemoveProductFromOrderCommandHandler {
+public class RemoveProductFromOrderCommandHandler {
 
     private final OrderingService orderingService;
 

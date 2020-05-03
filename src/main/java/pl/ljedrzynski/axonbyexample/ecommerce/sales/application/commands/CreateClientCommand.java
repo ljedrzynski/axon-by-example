@@ -8,5 +8,5 @@ public class CreateClientCommand {
 
     @TargetAggregateIdentifier
     String clientId;
-    String name;
+    String clientName;
 }

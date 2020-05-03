@@ -7,13 +7,13 @@ import pl.ljedrzynski.axonbyexample.ecommerce.sales.domain.productcatalog.events
 
 @Component
 @AllArgsConstructor
-public class ProductSummaryProjection {
+public class ProductProjectionHandler {
 
-    private final ProductSummaryRepository productSummaryRepository;
+    private final ProductReadModelRepository productReadModelRepository;
 
     @EventHandler
     public void handle(ProductAddedToCatalogEvent event) {
-        var productSummary = new ProductSummary(event.getId(), event.getName(), event.getType(), event.getPrice());
-        productSummaryRepository.save(productSummary);
+        var productReadModel = new ProductReadModel(event.getId(), event.getName(), event.getType(), event.getPrice().toString());
+        productReadModelRepository.save(productReadModel);
     }
 }

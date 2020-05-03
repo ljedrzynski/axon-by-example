@@ -8,12 +8,12 @@ import pl.ljedrzynski.axonbyexample.ecommerce.sales.domain.ordering.OrderingServ
 
 @Component
 @RequiredArgsConstructor
-class AddProductToOrderCommandHandler {
+public class AddProductToOrderCommandHandler {
 
     private final OrderingService orderingService;
 
     @CommandHandler
     void handle(AddProductToOrderCommand command) {
-        orderingService.addProductToOrder(command.getOrderId(), command.getProductId(), command.getQuantity());
+        orderingService.addProductToOrder(command.getOrderId(), command.getProductId(), command.getProductQuantity());
     }
 }

@@ -14,12 +14,12 @@ public class CreateClientCommandHandler {
     private final ClientService clientService;
 
     @CommandHandler
-    void handle(CreateClientCommand command) {
+    public void handle(CreateClientCommand command) {
         var clientData = convertToClientData(command);
         clientService.createNewClient(clientData);
     }
 
     private ClientData convertToClientData(CreateClientCommand command) {
-        return new ClientData(command.getClientId(), command.getName());
+        return new ClientData(command.getClientId(), command.getClientName());
     }
 }

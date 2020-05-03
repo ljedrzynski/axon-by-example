@@ -27,10 +27,12 @@ public class OrderingService {
     }
 
     public void addProductToOrder(String orderId, String productId, int quantity) {
-        executeOnAggregate(orderId, order -> {
+        Consumer<Order> addProductToOrder = order -> {
             var product = productCatalogService.getProductDataById(productId);
             order.addItem(product, quantity);
-        });
+        };
+
+        executeOnAggregate(orderId, addProductToOrder);
     }
 
     public void changeOrderedProductQuantity(String orderId, String productId, int quantity) {

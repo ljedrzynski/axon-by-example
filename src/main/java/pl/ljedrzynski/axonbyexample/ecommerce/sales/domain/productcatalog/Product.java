@@ -1,5 +1,6 @@
 package pl.ljedrzynski.axonbyexample.ecommerce.sales.domain.productcatalog;
 
+import lombok.NoArgsConstructor;
 import org.axonframework.eventsourcing.EventSourcingHandler;
 import org.axonframework.modelling.command.AggregateIdentifier;
 import org.axonframework.spring.stereotype.Aggregate;
@@ -9,6 +10,7 @@ import pl.ljedrzynski.axonbyexample.ecommerce.shared.cannonicalmodel.Money;
 import static org.axonframework.modelling.command.AggregateLifecycle.apply;
 
 @Aggregate
+@NoArgsConstructor
 public class Product {
 
     @AggregateIdentifier
